@@ -10,7 +10,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      // 配置代理，网易的post请求参数都被加密了~
+      '/api/getNewSong': {
+        target: 'http://localhost:3000/personalized/newsong',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getNewSong': ''
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

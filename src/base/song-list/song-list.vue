@@ -1,11 +1,11 @@
 <template>
-<ul class="song-list">
+<scroll class="song-list">
   <li class="song-list-item" v-for="(song, index) in songs" :key="index">
     <!--sl = song-list-->
     <div class="sl-infos">
       <p class="sl-infos-title">{{song.title}}</p>
       <p class="sl-infos-singer">
-        <i class="sl-infos-quality" v-if="getSongQuality(song.quality)"></i>
+        <i class="sl-infos-quality" :class="getSongQuality(song.quality)"></i>
         {{song.singer}}
       </p>
     </div>
@@ -13,10 +13,12 @@
       <span class="icon sl-control-icon"></span>
     </div>
   </li>
-</ul>
+</scroll>
 </template>
 
 <script type="text/ecmascript-6">
+import Scroll from 'base/scroll/scroll'
+
 export default {
   props: {
     songs: {
@@ -26,8 +28,11 @@ export default {
   },
   methods: {
     getSongQuality(quality) {
-
+      return ''
     }
+  },
+  components: {
+    Scroll
   }
 }
 </script>
