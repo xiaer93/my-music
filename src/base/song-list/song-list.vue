@@ -1,25 +1,22 @@
 <template>
-<scroll class="song-list">
-  <ul>
-    <li class="song-list-item" v-for="(song, index) in songs" :key="index">
-      <!--sl = song-list-->
-      <div class="sl-infos">
-        <p class="sl-infos-title">{{song.name}}</p>
-        <p class="sl-infos-singer">
-          <i class="sl-infos-quality" :class="getSongQuality(song.quality)"></i>
-          {{song.singer}}
-      </p>
-      </div>
-      <div class="sl-control">
-        <span class="icon sl-control-icon"></span>
-      </div>
-    </li>
-  </ul>
-</scroll>
+<ul class="song-list">
+  <li class="song-list-item" v-for="(song, index) in songs" :key="index" @click.stop="selectItem(song)">
+    <!--sl = song-list-->
+    <div class="sl-infos">
+      <p class="sl-infos-title">{{song.name}}</p>
+      <p class="sl-infos-singer">
+        <i class="icon" :class="getSongQuality(song.quality)"></i>
+        {{song.singer + ' - ' + song.name}}
+    </p>
+    </div>
+    <div class="sl-control">
+      <span class="icon sl-control-icon"></span>
+    </div>
+  </li>
+</ul>
 </template>
 
 <script type="text/ecmascript-6">
-import Scroll from 'base/scroll/scroll'
 
 export default {
   props: {
@@ -32,11 +29,12 @@ export default {
   },
   methods: {
     getSongQuality(quality) {
-      return ''
+      return (quality >= 1) ? 'sl-quality-sq sl-infos-quality' : ''
+    },
+    selectItem(song) {
+      console.log('song-list', song)
+      this.$emit('select', song)
     }
-  },
-  components: {
-    Scroll
   }
 }
 </script>
@@ -48,14 +46,17 @@ export default {
     padding-left: 10px;
     .song-list-item{
       display: flex;
+      border-bottom: 1px solid rgba(0,0,0,.1);
       .sl-infos{
         flex: 1 1 auto;
         padding: 6px 0;
         .sl-infos-title{
           font-size: 17px;
-          .no-wrap()
+          .no-wrap();
+          line-height: 1.8;
         }
         .sl-infos-singer{
+          max-width: 250px;
           font-size: 12px;
           color: #888;
           .no-wrap();
@@ -69,6 +70,10 @@ export default {
       }
       .sl-control{
         padding: 0 10px;
+        display: flex;
+        .icon{
+          margin: auto;
+        }
       }
     }
   }

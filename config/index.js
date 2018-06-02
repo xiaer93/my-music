@@ -18,11 +18,39 @@ module.exports = {
         pathRewrite: {
           '^/api/getNewSong': ''
         }
+      },
+      '/api/getPicSong': {
+        target: 'http://localhost:3000/personalized',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getPicSong': ''
+        }
+      },
+      '/api/getHotSong': {
+        target: 'http://localhost:3000/top/list',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getHotSong': ''
+        }
+      },
+      '/api/getSongUrl': {
+        target: 'http://localhost:3000/music/url',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getSongUrl': ''
+        }
+      },
+      '/api/getSongComment': {
+        target: 'http://localhost:3000/comment/music',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getSongComment': ''
+        }
       }
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '0.0.0.0', // can be overwritten by process.env.HOST  localhost
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
