@@ -10,7 +10,10 @@ const state = {
   currentIndex: -1,
 
   playList: [],
-  seqList: []
+  seqList: [],
+
+  // 歌单id
+  discId: -1
 }
 
 export default state

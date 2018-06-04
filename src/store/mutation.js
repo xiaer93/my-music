@@ -20,7 +20,19 @@ const mutations = {
     state.playList = songList
   },
   [types.SET_CURRENT_INDEX](state, index) {
+    console.log(index)
+
+    let total = state.playList.length
+    if (index === -1) {
+      index = total - 1
+    }
+    if (index === total) {
+      index = 0
+    }
     state.currentIndex = index
+  },
+  [types.SET_DISC_ID](state, id) {
+    state.discId = id
   }
 }
 

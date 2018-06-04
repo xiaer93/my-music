@@ -3,8 +3,9 @@
     <div class="picture-wrapper">
       <img class="picture" :src="data.picUrl" alt="歌单封面">
       <span class="number">{{data.playCount}}</span>
+      <span class="title" v-if="isShowTitle">歌单</span>
     </div>
-    <p class="title">{{data.name}}</p>
+    <p class="name" v-if="isShowName">{{data.name}}</p>
   </div>
 </template>
 
@@ -13,7 +14,17 @@ export default {
   props: {
     data: {
       type: Object,
-      default: null
+      default: () => {
+        return {}
+      }
+    },
+    isShowName: {
+      type: Boolean,
+      default: true
+    },
+    isShowTitle: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -40,8 +51,23 @@ export default {
       text-shadow: 1px 0 0 rgba(0,0,0,.15);
       background-image: url('~base/song-picture/icon-music.svg');
     }
+    .title{
+      position: absolute;
+      z-index: 3;
+      top: 20px;
+      left: 0;
+      padding: 0 8px;
+      height: 17px;
+      color: #fff;
+      font-size: 9px;
+      text-align: center;
+      line-height: 17px;
+      background-color: rgba(217,48,48,.8);
+      border-top-right-radius: 17px;
+      border-bottom-right-radius: 17px;
+    }
   }
-  .title{
+  .name{
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;

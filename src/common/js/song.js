@@ -2,9 +2,10 @@
  * Created by xiaer on 2018/6/1.
  */
 class Song {
-  constructor({id, name, artists, duration, imgSrc, quality}) {
+  constructor({id, name, title, artists, duration, imgSrc, quality}) {
     this.id = id
     this.name = name
+    this.title = title
     this.singer = getSinger(artists)
     this.duration = duration
     this.imgSrc = imgSrc

@@ -52,9 +52,13 @@ export default {
     },
     update() {
       // 等待dom刷新之后再更新swiper
-      this.$nextTick(() => {
+      /* this.$nextTick(() => {
         this.scroll.update()
-      })
+      }) */
+      // setTimeout在这里比nextTick靠谱，why？
+      setTimeout(() => {
+        this.scroll.update()
+      }, 20)
     }
   },
   watch: {

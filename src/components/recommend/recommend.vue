@@ -1,22 +1,23 @@
 <template>
   <div class="recommend">
-    <scroll :data="songs">
+    <scroll :data="scrollData">
       <div class="song-picture-wrapper">
         <h2 class="title">推荐歌单</h2>
         <ul class="picture-list">
-          <li class="item" v-for="item in songsPic" :key="item.id">
+          <li class="item" v-for="item in songsPic" :key="item.id" @click="showPlayList(item.id)">
             <song-picture :data="item"></song-picture>
           </li>
         </ul>
       </div>
       <div class="song-list-wrapper">
         <h2 class="title">最新音乐</h2>
-        <song-list class="song-list" :songs="songs"></song-list>
+        <song-list class="song-list" :songs="songs" @select="play"></song-list>
       </div>
       <div class="song-footer-wrapper">
         <h2 class="copyright">xiaer93</h2>
       </div>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -29,6 +30,8 @@ import SongList from 'base/song-list/song-list'
 import Scroll from 'base/scroll/scroll'
 import SongPicture from 'base/song-picture/song-picture'
 
+import {mapActions, mapMutations} from 'vuex'
+
 const SONGPIC_COUNT = 6
 
 export default {
@@ -40,21 +43,25 @@ export default {
   },
   computed: {
     scrollData() {
-      if (this.songs.length && this.songsPic) {
-        return this.songs.concat(this.songsPic)
-      } else {
-        return []
-      }
+      return this.songs.concat(this.songsPic)
     }
   },
   created() {
     this._getData()
   },
   methods: {
+    play(song) {
+      this.insertSong(song)
+    },
+    showPlayList(id) {
+      this.setDiscId(id)
+      this.$router.push({
+        path: `/recommend/${id}`
+      })
+    },
     _getData() {
       getNewSong().then((res) => {
         if (ERR_OK === res.code) {
-          console.log(res.result)
           this.songs = this._genSongs(res.result)
         }
       })
@@ -69,6 +76,7 @@ export default {
         return createSong({
           id: song.id,
           name: song.name,
+          title: song.name,
           artists: song.artists,
           duration: song.duration,
           imgSrc: song.album.blurPicUrl,
@@ -89,7 +97,13 @@ export default {
         })
       }
       return ret
-    }
+    },
+    ...mapActions([
+      'insertSong'
+    ]),
+    ...mapMutations({
+      'setDiscId': 'SET_DISC_ID'
+    })
   },
   components: {
     SongList,
@@ -135,8 +149,7 @@ export default {
       // padding等宽属性？
       padding-top: 53.3%;
       margin-top: 4px;
-      background: url('~common/image/recommend.png') no-repeat;
-      background-size: contain;
+      background: url('~common/image/recommend.png') no-repeat center/contain;
       .copyright{
         position: absolute;
         left: 50%;

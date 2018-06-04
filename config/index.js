@@ -46,6 +46,13 @@ module.exports = {
         pathRewrite: {
           '^/api/getSongComment': ''
         }
+      },
+      '/api/getPlayListDetail': {
+        target: 'http://localhost:3000//playlist/detail',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getPlayListDetail': ''
+        }
       }
     },
 

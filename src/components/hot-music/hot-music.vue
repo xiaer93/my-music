@@ -48,7 +48,6 @@ export default {
           this.updateTime = `更新日期：${time.getMonth()}月${time.getDate()}日`
 
           let tracks = res.playlist.tracks
-          console.log(tracks)
           this.storeSongs = this._genSongs(tracks)
           this.songs = this.storeSongs.splice(0, 20)
         }
@@ -59,6 +58,7 @@ export default {
         return createSong({
           id: song.id,
           name: song.name,
+          title: song.name,
           artists: song.ar,
           duration: song.dt,
           imgSrc: song.al.picUrl,

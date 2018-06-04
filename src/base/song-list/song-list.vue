@@ -2,8 +2,9 @@
 <ul class="song-list">
   <li class="song-list-item" v-for="(song, index) in songs" :key="index" @click.stop="selectItem(song)">
     <!--sl = song-list-->
+    <div class="sl-number" v-if="hasNumber">{{index + 1}}</div>
     <div class="sl-infos">
-      <p class="sl-infos-title">{{song.name}}</p>
+      <p class="sl-infos-title">{{song.title}}</p>
       <p class="sl-infos-singer">
         <i class="icon" :class="getSongQuality(song.quality)"></i>
         {{song.singer + ' - ' + song.name}}
@@ -25,6 +26,10 @@ export default {
       default: () => {
         return []
       }
+    },
+    hasNumber: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -43,14 +48,26 @@ export default {
   @import "~common/less/mixin";
 
   .song-list{
+    box-sizing: border-box;
     padding-left: 10px;
+    width: 100%;
     .song-list-item{
       display: flex;
+      width: 100%;
       border-bottom: 1px solid rgba(0,0,0,.1);
+      .sl-number{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        font-size: 17px;
+        color: #999;
+      }
       .sl-infos{
         flex: 1 1 auto;
         padding: 6px 0;
         .sl-infos-title{
+          width: 250px;
           font-size: 17px;
           .no-wrap();
           line-height: 1.8;
@@ -69,6 +86,7 @@ export default {
         }
       }
       .sl-control{
+        flex: 0 0 auto;
         padding: 0 10px;
         display: flex;
         .icon{

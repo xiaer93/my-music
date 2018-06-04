@@ -29,3 +29,9 @@ export function getSongComment(id, limit) {
     limit
   })
 }
+
+export function getPlayListDetail(id) {
+  return ajax('/api/getPlayListDetail', {
+    id
+  })
+}
