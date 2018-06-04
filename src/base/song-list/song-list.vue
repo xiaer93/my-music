@@ -4,9 +4,9 @@
     <!--sl = song-list-->
     <div class="sl-number" v-if="hasNumber">{{index + 1}}</div>
     <div class="sl-infos">
-      <p class="sl-infos-title">{{song.title}}</p>
+      <p class="sl-infos-title">{{song.title || song.name}}</p>
       <p class="sl-infos-singer">
-        <i class="icon" :class="getSongQuality(song.quality)"></i>
+        <i class="icon" :class="getSongQuality(song.quality)" v-if="!hasNumber"></i>
         {{song.singer + ' - ' + song.name}}
     </p>
     </div>
@@ -57,6 +57,7 @@ export default {
       border-bottom: 1px solid rgba(0,0,0,.1);
       .sl-number{
         display: flex;
+        flex: 0 0 auto;
         align-items: center;
         justify-content: center;
         width: 40px;
@@ -67,13 +68,13 @@ export default {
         flex: 1 1 auto;
         padding: 6px 0;
         .sl-infos-title{
-          width: 250px;
+          max-width: 200px;
           font-size: 17px;
           .no-wrap();
           line-height: 1.8;
         }
         .sl-infos-singer{
-          max-width: 250px;
+          max-width: 200px;
           font-size: 12px;
           color: #888;
           .no-wrap();

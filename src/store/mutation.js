@@ -20,8 +20,6 @@ const mutations = {
     state.playList = songList
   },
   [types.SET_CURRENT_INDEX](state, index) {
-    console.log(index)
-
     let total = state.playList.length
     if (index === -1) {
       index = total - 1

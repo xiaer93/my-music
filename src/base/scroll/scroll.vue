@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-container" ref="scroll">
+  <div class="swiper-container" ref="scroll" @touchmove.stop>
     <div class="swiper-wrapper">
       <div class="swiper-slide">
         <slot></slot>

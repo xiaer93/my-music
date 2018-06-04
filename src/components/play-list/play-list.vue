@@ -30,11 +30,11 @@
       </div>
       <div class="song-list">
         <p class="title">歌曲列表</p>
-        <song-list :songs="songs" :hasNumber="hasNumber"></song-list>
+        <song-list :songs="songs" :hasNumber="hasNumber" @select="playOne"></song-list>
       </div>
     </scroll>
     <div class="control-wrapper">
-      <span class="play-all">播放歌单</span>
+      <span class="play-all" @click="play">播放歌单</span>
     </div>
   </div>
 </template>
@@ -43,7 +43,7 @@
 import {getPlayListDetail} from 'api/song'
 import {ERR_OK} from 'api/config'
 import {createSong} from 'common/js/song'
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 
 import SongList from 'base/song-list/song-list'
 import SongPicture from 'base/song-picture/song-picture'
@@ -69,6 +69,12 @@ export default {
     showMore(e) {
       e.target.classList.toggle('active')
       this.$refs.scroll.update()
+    },
+    play() {
+      this.playAll(this.songs)
+    },
+    playOne(song) {
+      this.insertSong(song)
     },
     _getPlayListDetail(id) {
       getPlayListDetail(id).then((res) => {
@@ -99,7 +105,7 @@ export default {
       return songs.map((song) => {
         return createSong({
           id: song.id,
-          name: song.al.name,
+          name: song.name,
           title: song.alia[0],
           artists: song.ar,
           duration: song.dt,
@@ -108,7 +114,11 @@ export default {
           quality: 1
         })
       })
-    }
+    },
+    ...mapActions([
+      'playAll',
+      'insertSong'
+    ])
   },
   created() {
     let discId = this.discId
@@ -155,11 +165,16 @@ export default {
           flex: 1 1 auto;
           margin-left: 16px;
           .title{
+            width: 160px;
             padding-top: 1px;
             font-size: 17px;
             line-height: 1.3;
             color: #fefefe;
             height: 44px;
+            overflow: hidden;
+            text-overflow: ellipsis;//定义当文本溢出时发生什么，ellipsis使用省略符号表示修建文本；clip修建；string自定义字符！
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
           }
           .author{
             display: inline-block;

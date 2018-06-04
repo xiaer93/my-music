@@ -48,10 +48,24 @@ module.exports = {
         }
       },
       '/api/getPlayListDetail': {
-        target: 'http://localhost:3000//playlist/detail',
+        target: 'http://localhost:3000/playlist/detail',
         changeOrigin: true,
         pathRewrite: {
           '^/api/getPlayListDetail': ''
+        }
+      },
+      '/api/getHotSearch': {
+        target: 'http://localhost:3000/search/hot',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getHotSearch': ''
+        }
+      },
+      '/api/getSearchResult': {
+        target: 'http://localhost:3000/search/multimatch',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getSearchResult': ''
         }
       }
     },

@@ -35,3 +35,13 @@ export function getPlayListDetail(id) {
     id
   })
 }
+
+export function getHotSearch() {
+  return ajax('/api/getHotSearch')
+}
+
+export function getSearchResult(keyword) {
+  return ajax('/api/getSearchResult', {
+    keyword
+  })
+}

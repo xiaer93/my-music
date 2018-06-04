@@ -25,6 +25,13 @@ export const insertSong = function ({commit, state}, song) {
   commit(types.SET_PLAY_STATE, STATE.STATE_PLAYING)
 }
 
+export const playAll = function ({commit, state}, playlist) {
+  commit(types.SET_PLAY_LIST, playlist)
+  commit(types.SET_CURRENT_INDEX, 0)
+  commit(types.SET_FULL_SCREEN, STATE.MAX_SCREEN)
+  commit(types.SET_PLAY_STATE, STATE.STATE_PLAYING)
+}
+
 function findSong(list, song) {
   return list.findIndex((item) => {
     return item.id === song.id

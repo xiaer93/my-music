@@ -1,6 +1,6 @@
 <template>
   <div class="player">
-    <transition name="slide" duration="2000">
+    <transition name="slide" duration="800">
       <div class="max-player" v-show="fullScreen === state.MAX_SCREEN">
         <div class="max-player-bg">
           <div class="bg" :style="{backgroundImage: `url(${currentSong.imgSrc})`}"></div>
@@ -78,7 +78,8 @@ export default {
   data() {
     return {
       songUrl: '',
-      comments: []
+      comments: [],
+      canPlay: false
     }
   },
   computed: {
@@ -95,6 +96,7 @@ export default {
   },
   methods: {
     play() {
+      this.canPlay = true
       this.$refs.music.play()
     },
     close() {
@@ -104,10 +106,10 @@ export default {
       this.setPlayState((this.playState === this.state.STATE_PLAYING) ? this.state.STATE_PAUSE : this.state.STATE_PLAYING)
     },
     prev() {
-      this.setCurrentIndex(this.currentIndex + 1)
+      this.setCurrentIndex(this.currentIndex - 1)
     },
     next() {
-      this.setCurrentIndex(this.currentIndex - 1)
+      this.setCurrentIndex(this.currentIndex + 1)
     },
     changeMode() {
 
@@ -128,7 +130,6 @@ export default {
     },
     _genComments(comments) {
       return comments.map((c) => {
-        console.log(c)
         return {
           userName: c.user.nickname,
           avatarUrl: c.user.avatarUrl,
@@ -150,15 +151,16 @@ export default {
         return undefined
       }
 
+      this.canplay = false
       this.$refs.music.pause()
       this._getSongUrl(newSong.id)
       this._getSongComment(newSong.id, LIMIT_COMMENT)
     },
     playState(newState, oldState) {
       if (newState === this.state.STATE_PAUSE) {
-        this.$refs.music.pause()
+        this.canPlay && this.$refs.music.pause()
       } else {
-        this.$refs.music.play()
+        this.canPlay && this.$refs.music.play()
       }
     }
   },
@@ -265,6 +267,8 @@ export default {
               width: 184px;
               height: 184px;
               border-radius: 50%;
+              text-align: center;
+              vertical-align: middle;
               overflow: hidden;
               // 当图片无显示时，显示默认cd盘
               background: url('~common/image/disc_default.png') no-repeat center/contain;
@@ -331,19 +335,12 @@ export default {
       .stage{
         transition: all .5s 0.3s cubic-bezier(.45,1.5,.76,1.46);
       }
-      .cd:after{
-        /*transition: all 1s 1s linear;*/
-        animation: play .6s .8s both;
-      }
     }
     &.slide-enter, &.slide-leave-to{
       opacity: 0;
       .stage{
         opacity: 0;
         transform: scale(0.8);
-      }
-      .cd:after{
-        transform: rotateX( 30deg);
       }
     }
   }
