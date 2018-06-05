@@ -10,6 +10,7 @@ class Song {
     this.duration = duration
     this.imgSrc = imgSrc
     this.quality = quality
+    this.songUrl = ''
   }
 }
 

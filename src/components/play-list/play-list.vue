@@ -79,7 +79,6 @@ export default {
     _getPlayListDetail(id) {
       getPlayListDetail(id).then((res) => {
         if (res.code === ERR_OK) {
-          console.log(res.playlist)
           let playlist = res.playlist
 
           this.songPic = {

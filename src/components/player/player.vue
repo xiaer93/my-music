@@ -153,7 +153,12 @@ export default {
 
       this.canplay = false
       this.$refs.music.pause()
-      this._getSongUrl(newSong.id)
+
+      if (newSong.songUrl) {
+        this.songUrl = newSong.songUrl
+      } else {
+        this._getSongUrl(newSong.id)
+      }
       this._getSongComment(newSong.id, LIMIT_COMMENT)
     },
     playState(newState, oldState) {
@@ -274,6 +279,7 @@ export default {
               background: url('~common/image/disc_default.png') no-repeat center/contain;
               img{
                 width: 100%;
+                height: 100%
               }
             }
           }

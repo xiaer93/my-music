@@ -37,7 +37,6 @@ export default {
       return (quality >= 1) ? 'sl-quality-sq sl-infos-quality' : ''
     },
     selectItem(song) {
-      console.log('song-list', song)
       this.$emit('select', song)
     }
   }

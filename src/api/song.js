@@ -40,8 +40,17 @@ export function getHotSearch() {
   return ajax('/api/getHotSearch')
 }
 
-export function getSearchResult(keyword) {
+// 支持参数：limit、offset、type
+export function getSearchResult(keywords) {
   return ajax('/api/getSearchResult', {
-    keyword
+    keywords
+  })
+}
+
+export function getPerfectResult(keywords, limit, offset) {
+  return ajax('/api/getPerfectResult', {
+    keywords,
+    limit,
+    offset
   })
 }

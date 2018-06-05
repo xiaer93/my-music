@@ -62,10 +62,17 @@ module.exports = {
         }
       },
       '/api/getSearchResult': {
-        target: 'http://localhost:3000/search/multimatch',
+        target: 'http://localhost:3000/search',
         changeOrigin: true,
         pathRewrite: {
           '^/api/getSearchResult': ''
+        }
+      },
+      '/api/getPerfectResult': {
+        target: 'http://localhost:3000/search/multimatch',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getPerfectResult': ''
         }
       }
     },
