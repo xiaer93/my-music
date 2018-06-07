@@ -55,6 +55,7 @@
             </div>
           </div>
           <div class="comment-wrapper">
+            <h2 class="title">精彩评论</h2>
             <comment-list :data="comments"></comment-list>
           </div>
           <!--<div class="recommend-wrapper"></div>-->
@@ -63,7 +64,7 @@
     </transition>
     <div class="mini-player" v-show="fullScreen === state.MINI_SCREEN">
     </div>
-    <audio :src="songUrl" @canplay="play" @ended="next" ref="music"></audio>
+    <audio :src="songUrl" @canplay="songReady" @ended="next" ref="music"></audio>
   </div>
 </template>
 
@@ -84,6 +85,7 @@ const LIMIT_COMMENT = 10
 
 // 获取纯歌词的正则表达式
 const timeExp = /\[(\d{2}):(\d{2}).(\d{2,3})]/gi
+var offsetLine = 0
 
 export default {
   data() {
@@ -91,7 +93,7 @@ export default {
       isInit: false,
       songUrl: '',
       comments: [],
-      canPlay: false,
+      isSongReady: 0,
       pureLyric: [],
       currentLine: 0
     }
@@ -99,6 +101,9 @@ export default {
   computed: {
     playClass() {
       return (this.playState === this.state.STATE_PLAYING) ? 'play-music' : 'play-music play-music-pause'
+    },
+    canPlay() {
+      return this.isSongReady && this.isLyricReady
     },
     ...mapGetters([
       'playList',
@@ -109,10 +114,8 @@ export default {
     ])
   },
   methods: {
-    play() {
-      this.canPlay = true
-      this.$refs.music.play()
-      this.musicLyric.play()
+    songReady() {
+      this.isSongReady += 10
     },
     close() {
       this.setFullScreen(this.state.MINI_SCREEN)
@@ -141,9 +144,11 @@ export default {
         if (res.code === ERR_OK) {
           let lyric = res.lrc.lyric
           this.pureLyric = this._pureLyric(lyric)
-          this.musicLyric = new Lyric(lyric, (...args) => {
-            this._hanlderLyric(...args)
+          this.musicLyric = new Lyric(lyric, (args) => {
+            this._hanlderLyric(args)
           })
+
+          this.isSongReady += 1
         }
       })
     },
@@ -169,11 +174,13 @@ export default {
       return lyric.replace(timeExp, '').split('\n').map(t => t.trim())
     },
     _hanlderLyric({lineNum, txt}) {
-      let index = this.pureLyric.indexOf(txt, this.currentLine)
-      this.currentLine = index
+      // lyric解析不够正确~
+      console.log(txt)
+      offsetLine += this.pureLyric[lineNum] ? 0 : 1
+      this.currentLine = offsetLine + lineNum
 
-      if (index > 1) {
-        this.$refs.lyricScroll.scrollToElementY(this.$refs.lyricItem[index - 1])
+      if (this.currentLine > 1) {
+        this.$refs.lyricScroll.scrollToElementY(this.$refs.lyricItem[this.currentLine - 1])
       }
     },
     ...mapMutations({
@@ -188,8 +195,9 @@ export default {
         return undefined
       }
 
-      this.canplay = false
-      this.$refs.music.pause()
+      this.$refs.music && this.$refs.music.pause()
+      this.musicLyric && this.musicLyric.stop()
+      this.isSongReady = 0
 
       if (newSong.songUrl) {
         this.songUrl = newSong.songUrl
@@ -200,10 +208,23 @@ export default {
       this._getSongLyric(newSong.id)
     },
     playState(newState, oldState) {
+      // 歌曲歌词未加载则直接退出~
+      if (this.isSongReady !== 11) {
+        return
+      }
       if (newState === this.state.STATE_PAUSE) {
-        this.canPlay && this.$refs.music.pause()
+        this.musicLyric.stop()
+        this.$refs.music.pause()
       } else {
-        this.canPlay && this.$refs.music.play()
+        this.$refs.music.play()
+        this.musicLyric.play()
+      }
+    },
+    // computed不会导致watch的更新
+    isSongReady(newValue) {
+      if (newValue === 11) {
+        this.musicLyric.play()
+        this.$refs.music.play()
       }
     }
   },
@@ -287,8 +308,8 @@ export default {
           position: relative;
           flex: 0 0 auto;
           margin: auto;
-          width: 296px;
-          height: 296px;
+          width: 250px;
+          height: 250px;
           transform-origin: top center;
           .cd{
             display: flex;
@@ -317,7 +338,8 @@ export default {
               background: url('~common/image/disc_default.png') no-repeat center/contain;
               img{
                 width: 100%;
-                height: 100%
+                height: 100%;
+                border-radius: 50%;
               }
             }
           }
@@ -344,8 +366,8 @@ export default {
           text-overflow: ellipsis;
         }
         .lyric-scroll{
-          margin-top: 15px;
-          height: 113px;
+          margin-top: 20px;
+          height: 66px;
           line-height: 1.5;
           font-size: 13px;
           overflow: hidden;
@@ -355,6 +377,7 @@ export default {
             padding-bottom: 4px;
             height: 20px;
             line-height: 20px;
+            transition: color .6s;
             &.active{
               color: rgb(255, 255, 255);
             }
@@ -369,7 +392,7 @@ export default {
         .operators{
           display: flex;
           width: 100%;
-          height: 60px;
+          height: 70px;
           text-align: center;
           font-style: oblique;
           .icon-font {
@@ -401,6 +424,14 @@ export default {
       }
     }
     .comment-wrapper{
+      padding-top: 10px;
+      .title{
+        padding: 0 0 0 10px;
+        line-height: 25px;
+        color: #fff;
+        font-size: 16px;
+        background-color: transparent;
+      }
     }
 
     // fixme:为什么失效了？必须使用强制刷新~

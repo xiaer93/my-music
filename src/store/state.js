@@ -4,7 +4,7 @@
 import {STATE} from 'common/js/config'
 
 const state = {
-  playState: STATE.STATE_PAUSE,
+  playState: STATE.STATE_PLAYING,
   fullScene: STATE.INIT_SCREEN,
   playMode: STATE.MODE_CIRCLE,
   currentIndex: -1,

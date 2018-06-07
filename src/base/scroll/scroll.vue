@@ -70,6 +70,7 @@ export default {
         this.scroll.update()
       }) */
       // setTimeout在这里比nextTick靠谱，why？
+      // 还是有bug~，推荐页，xiaer无法出来~
       setTimeout(() => {
         // 等待dom挂载完成后再更新swiper
         this.scroll.update(true)
