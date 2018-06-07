@@ -25,7 +25,7 @@
             标签：
             <em class="tag" v-for="(tag, index) in creator.tags" :key="index">{{tag}}</em>
           </p>
-          <p class="content" @click="showMore">{{creator.content}}</p>
+          <p class="content" @click="showMore" v-html="creator.content"></p>
         </div>
       </div>
       <div class="song-list">
@@ -93,7 +93,7 @@ export default {
             avatarUrl: playlist.creator.avatarUrl,
             title: playlist.name,
             tags: playlist.creator.expertTags,
-            content: playlist.description
+            content: this._analyzeStr(playlist.description)
           }
 
           this.songs = this._genSongs(playlist.tracks)
@@ -113,6 +113,9 @@ export default {
           quality: 1
         })
       })
+    },
+    _analyzeStr(str) {
+      return '简介：' + str.replace(/\n/g, '<br>')
     },
     ...mapActions([
       'playAll',
@@ -241,6 +244,8 @@ export default {
       .content{
         margin-bottom: 18px;
         line-height: 19px;
+        font-size: 14px;
+        font-family: Helvetica, sans-serif;
         color: #666;
         overflow: hidden;
         text-overflow: ellipsis;

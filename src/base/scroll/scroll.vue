@@ -80,6 +80,12 @@ export default {
     },
     restart() {
       this.scroll.allowTouchMove = true
+    },
+    scrollToElementY(el) {
+      let offsetY = el.offsetTop
+      console.log(offsetY)
+      this.scroll.setTransition(1000)
+      this.scroll.setTranslate(-offsetY)
     }
   },
   watch: {

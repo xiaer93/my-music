@@ -142,6 +142,7 @@ export default {
       }
       .song-list{
         margin-top: 14px;
+        padding-left: 10px;
       }
     }
     .song-footer-wrapper{

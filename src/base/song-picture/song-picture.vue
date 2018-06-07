@@ -39,17 +39,29 @@ export default {
     }
     .number{
       position: absolute;
-      right: 5px;
-      top: 2px;
+      right: 0;
+      top: 0;
+      margin-top: 5px;
+      padding: 0 2px 0 13px;
       z-index: 3;
-      padding-left: 13px;
       color: #fff;
       font-size: 12px;
+      line-height: 18px;
       background-position: 0;
       background-repeat: no-repeat;
       background-size: 11px 10px;
       text-shadow: 1px 0 0 rgba(0,0,0,.15);
       background-image: url('~base/song-picture/icon-music.svg');
+      &:after{
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 18px;
+        z-index: -1;
+        background-image: linear-gradient(90deg,transparent,rgba(0,0,0,.2));
+      }
     }
     .title{
       position: absolute;

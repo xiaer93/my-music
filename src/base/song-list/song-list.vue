@@ -48,7 +48,6 @@ export default {
 
   .song-list{
     box-sizing: border-box;
-    padding-left: 10px;
     width: 100%;
     .song-list-item{
       display: flex;

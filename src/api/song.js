@@ -23,6 +23,12 @@ export function getSongUrl(id) {
   })
 }
 
+export function getSongLyric(id) {
+  return ajax('/api/getSongLyric', {
+    id: id
+  })
+}
+
 export function getSongComment(id, limit) {
   return ajax('/api/getSongComment', {
     id,

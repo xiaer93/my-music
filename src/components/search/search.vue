@@ -23,6 +23,22 @@
         </ul>
       </div>
       <div class="result-wrapper" v-show="query">
+        <div class="perfect-wrapper">
+          <p class="title">最佳匹配</p>
+          <ul class="perfect">
+            <li class="perfect-item" v-for="item in  perfect" :key="item.id">
+              <img class="img" :src="item.picUrl" alt="">
+              <div class="singer-wrapper" v-if="item.type === 'artist'">
+                <span class="name">歌手：{{item.singer}}</span>
+              </div>
+              <div class="album-wrapper" v-else>
+                <span class="name">专辑：{{item.album}}</span>
+                <span class="singer">{{item.singer}}</span>
+              </div>
+              <i class="icon"></i>
+            </li>
+          </ul>
+        </div>
         <song-list :songs="songs" @select="play"></song-list>
         <p class="load-more">{{getTips}}</p>
       </div>
@@ -77,12 +93,14 @@ export default {
     },
     searchMore() {
       // fixme: 为什么scrollEnd发生在watch-query之前？？？
-      if (!this.query || !this.queryObj) {
+      if (!this.songs.length) {
         return
       }
 
-      let {keywords, limit, canSearch} = this.queryObj
-      canSearch && this._getSearchResult(keywords, limit, ++this.queryObj.offset)
+      setTimeout(() => {
+        let {keywords, limit, canSearch} = this.queryObj
+        canSearch && this._getSearchResult(keywords, limit, ++this.queryObj.offset)
+      }, 1000)
     },
     play(song) {
       this._getSongUrl(song, (songUrl) => {
@@ -115,7 +133,8 @@ export default {
               this.perfect.push({
                 type: 'artist',
                 id: a.id,
-                name: a.name,
+                // 歌手名称
+                singer: a.name,
                 picUrl: a.picUrl
               })
             })
@@ -123,11 +142,14 @@ export default {
 
           // 存入专辑信息
           if (result.orders.indexOf('album') !== -1) {
+            console.log(result)
             result.album.forEach((a) => {
               this.perfect.push({
                 type: 'album',
                 id: a.id,
-                name: a.name,
+                // 专辑名称
+                album: a.name,
+                singer: a.artist.name,
                 picUrl: a.picUrl
               })
             })
@@ -296,6 +318,64 @@ export default {
         }
       }
       .result-wrapper{
+        .perfect-wrapper{
+          .title{
+            margin-top: -10px;
+            font-size: 12px;
+            line-height: 16px;
+            color: #666;
+          }
+          .perfect{
+            .perfect-item{
+              display: flex;
+              align-items: center;
+              height: 66px;
+              padding: 8px 10px 8px 0;
+              box-sizing: border-box;
+              border-bottom: 1px solid rgba(0,0,0,.1);
+              .img{
+                width: 50px;
+                height: 50px;
+                margin-right: 15px;
+                line-height: 0;
+              }
+              .singer-wrapper{
+                display: flex;
+                align-items: center;
+                flex: 1 1 auto;
+              }
+              .album-wrapper{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                flex: 1 1 auto;
+              }
+              .name{
+                display: block;
+                font-size: 17px;
+                line-height: 30px;
+                color: #333;
+              }
+              .singer{
+                display: block;
+                font-size: 12px;
+                line-height: 15px;
+                color: #999;
+              }
+              .icon{
+                width: 8px;
+                height: 13px;
+                margin-right: 8px;
+                margin-left: 10px;
+                vertical-align: middle;
+                background-position: 0 0;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAyNiI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBmaWxsPSJub25lIiBzdHJva2U9IiM5YjliOWIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMi45MzkgMjMuOTM5IDEzLjg3OSAxMyAyLjkzOSAyLjA2MSIvPjwvc3ZnPg==);
+              }
+            }
+          }
+        }
         .load-more{
           text-align: center;
           font-size: 15px;

@@ -68,6 +68,7 @@ export default {
       })
     },
     loadMore() {
+      // 延时1s加载歌曲内容~
       setTimeout(() => {
         this.songs = this.songs.concat(this.storeSongs.splice(0, 20))
       }, 1000)
@@ -130,6 +131,7 @@ export default {
       }
     }
     .song-list-wrapper{
+      padding-left: 10px;
       .load-more{
         text-align: center;
         font-size: 15px;

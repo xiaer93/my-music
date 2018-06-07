@@ -74,6 +74,13 @@ module.exports = {
         pathRewrite: {
           '^/api/getPerfectResult': ''
         }
+      },
+      '/api/getSongLyric': {
+        target: 'http://localhost:3000/lyric',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/getSongLyric': ''
+        }
       }
     },
 

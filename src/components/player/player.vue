@@ -25,7 +25,14 @@
               </div>
             </div>
             <div class="lyric-wrapper">
-
+              <h2 class="title">{{`${currentSong.singer}-${currentSong.name}`}}</h2>
+              <div class="lyric-scroll">
+                <scroll :isInit="false" :data="pureLyric" ref="lyricScroll">
+                  <p class="lyric-item" :class="{'active': currentLine === index}" v-for="(lyric, index) in pureLyric" :key="index" ref="lyricItem">
+                    {{lyric}}
+                  </p>
+                </scroll>
+              </div>
             </div>
             <div class="control-wrapper">
               <div class="operators">
@@ -63,8 +70,9 @@
 <script type="text/ecmascript-6">
 import {mapGetters, mapMutations} from 'vuex'
 import {STATE} from 'common/js/config'
-import {getSongUrl, getSongComment} from 'api/song'
+import {getSongUrl, getSongComment, getSongLyric} from 'api/song'
 import {ERR_OK} from 'api/config'
+import Lyric from 'lyric-parser'
 
 import Scroll from 'base/scroll/scroll'
 import CommentList from 'base/comment-list/comment-list'
@@ -74,12 +82,18 @@ import Velocity from 'velocity-animate'
 
 const LIMIT_COMMENT = 10
 
+// 获取纯歌词的正则表达式
+const timeExp = /\[(\d{2}):(\d{2}).(\d{2,3})]/gi
+
 export default {
   data() {
     return {
+      isInit: false,
       songUrl: '',
       comments: [],
-      canPlay: false
+      canPlay: false,
+      pureLyric: [],
+      currentLine: 0
     }
   },
   computed: {
@@ -98,6 +112,7 @@ export default {
     play() {
       this.canPlay = true
       this.$refs.music.play()
+      this.musicLyric.play()
     },
     close() {
       this.setFullScreen(this.state.MINI_SCREEN)
@@ -121,6 +136,17 @@ export default {
         }
       })
     },
+    _getSongLyric(id) {
+      getSongLyric(id).then((res) => {
+        if (res.code === ERR_OK) {
+          let lyric = res.lrc.lyric
+          this.pureLyric = this._pureLyric(lyric)
+          this.musicLyric = new Lyric(lyric, (...args) => {
+            this._hanlderLyric(...args)
+          })
+        }
+      })
+    },
     _getSongComment(id, limit) {
       getSongComment(id, limit).then((res) => {
         if (res.code === ERR_OK) {
@@ -138,6 +164,17 @@ export default {
           content: c.content
         }
       })
+    },
+    _pureLyric(lyric) {
+      return lyric.replace(timeExp, '').split('\n').map(t => t.trim())
+    },
+    _hanlderLyric({lineNum, txt}) {
+      let index = this.pureLyric.indexOf(txt, this.currentLine)
+      this.currentLine = index
+
+      if (index > 1) {
+        this.$refs.lyricScroll.scrollToElementY(this.$refs.lyricItem[index - 1])
+      }
     },
     ...mapMutations({
       'setFullScreen': 'SET_FULL_SCREEN',
@@ -160,6 +197,7 @@ export default {
         this._getSongUrl(newSong.id)
       }
       this._getSongComment(newSong.id, LIMIT_COMMENT)
+      this._getSongLyric(newSong.id)
     },
     playState(newState, oldState) {
       if (newState === this.state.STATE_PAUSE) {
@@ -290,6 +328,36 @@ export default {
             width: 100%;
             height:100%;
             background: url('~common/image/disc_light-ip6.png') no-repeat center/contain;
+          }
+        }
+      }
+      .lyric-wrapper{
+        margin-top: 25px;
+        padding: 0 35px;
+        .title{
+          text-align: center;
+          font-size: 15px;
+          line-height: 1.1;
+          color: #fefefe;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        .lyric-scroll{
+          margin-top: 15px;
+          height: 113px;
+          line-height: 1.5;
+          font-size: 13px;
+          overflow: hidden;
+          text-align: center;
+          color: hsla(0,0%,100%,.6);
+          .lyric-item{
+            padding-bottom: 4px;
+            height: 20px;
+            line-height: 20px;
+            &.active{
+              color: rgb(255, 255, 255);
+            }
           }
         }
       }
