@@ -2,6 +2,13 @@
 
 > 模仿网易云音乐，使用vue全家桶构建webapp音乐播放器~
 
+## 效果
+![](http://p1b2282d8.bkt.clouddn.com/blog/music-1.png)
+![](http://p1b2282d8.bkt.clouddn.com/blog/music-2.png)
+![](http://p1b2282d8.bkt.clouddn.com/blog/music-3.png)
+![](http://p1b2282d8.bkt.clouddn.com/blog/music-4.png)
+![](http://p1b2282d8.bkt.clouddn.com/blog/music-5.png)
+
 ## Build Setup
 
 ``` bash
